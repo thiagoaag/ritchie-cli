@@ -9,6 +9,10 @@ import (
 	"github.com/ZupIT/ritchie-cli/pkg/security"
 	"github.com/ZupIT/ritchie-cli/pkg/security/otp"
 	"github.com/ZupIT/ritchie-cli/pkg/server"
+
+	"errors"
+
+	"github.com/spf13/cobra"
 )
 
 type inputTextMock struct{}
@@ -49,7 +53,7 @@ func (inputPasswordMock) Password(label string) (string, error) {
 
 type autocompleteGenMock struct{}
 
-func (autocompleteGenMock) Generate(s autocomplete.ShellName) (string, error) {
+func (autocompleteGenMock) Generate(s autocomplete.ShellName, cmd *cobra.Command) (string, error) {
 	return "autocomplete", nil
 }
 
@@ -77,6 +81,20 @@ func (inputListCredMock) List(name string, items []string) (string, error) {
 	return "me", nil
 }
 
+type inputListErrorMock struct{}
+
+func (inputListErrorMock) List(name string, items []string) (string, error) {
+	return "", errors.New("some error")
+}
+
+type inputListCustomMock struct{
+	list func(name string, items []string) (string, error)
+}
+
+func (i inputListCustomMock) List(name string, items []string) (string, error) {
+	return i.list(name, items)
+}
+
 type repoAdder struct{}
 
 func (a repoAdder) List() ([]formula.Repository, error) {
@@ -84,12 +102,6 @@ func (a repoAdder) List() ([]formula.Repository, error) {
 }
 
 func (repoAdder) Add(d formula.Repository) error {
-	return nil
-}
-
-type repoCleaner struct{}
-
-func (repoCleaner) Clean(name string) error {
 	return nil
 }
 
@@ -214,6 +226,24 @@ func (s singleCredSettingsMock) WriteCredentials(fields credential.Fields, path 
 	return nil
 }
 
+type singleCredSettingsCustomMock struct {
+	writeDefaultCredentials func(path string) error
+	readCredentials func(path string) (credential.Fields, error)
+	writeCredentials func(fields credential.Fields, path string) error
+}
+
+func (s singleCredSettingsCustomMock) WriteDefaultCredentials(path string) error {
+	return s.writeDefaultCredentials(path)
+}
+
+func (s singleCredSettingsCustomMock) ReadCredentials(path string) (credential.Fields, error) {
+	return s.readCredentials(path)
+}
+
+func (s singleCredSettingsCustomMock) WriteCredentials(fields credential.Fields, path string) error {
+	return s.writeCredentials(fields, path)
+}
+
 func (credSettingsMock) Fields() (credential.Fields, error) {
 	return credential.Fields{
 		"github": []credential.Field{
@@ -233,7 +263,7 @@ type runnerMock struct {
 	error error
 }
 
-func (r runnerMock) Run(def formula.Definition, inputType api.TermInputType) error {
+func (r runnerMock) Run(def formula.Definition, inputType api.TermInputType, verboseFlag string) error {
 	return r.error
 }
 
@@ -350,4 +380,31 @@ type otpResolverCustomMock struct {
 
 func (m otpResolverCustomMock) RequestOtp(url, organization string) (otp.Response, error) {
 	return m.requestOtp(url, organization)
+}
+
+type FileManagerMock struct{}
+
+// Read of FileManagerMock
+func (fm FileManagerMock) Read(path string) ([]byte, error) {
+	return []byte("Some response"), nil
+}
+
+// Exists of FileManagerMock
+func (fm FileManagerMock) Exists(path string) bool {
+	return true
+}
+
+type FileManagerCustomMock struct {
+	read   func(path string) ([]byte, error)
+	exists func(path string) bool
+}
+
+// Read of FileManagerCustomMock
+func (fmc FileManagerCustomMock) Read(path string) ([]byte, error) {
+	return fmc.read(path)
+}
+
+// Exists of FileManagerCustomMock
+func (fmc FileManagerCustomMock) Exists(path string) bool {
+	return fmc.exists(path)
 }

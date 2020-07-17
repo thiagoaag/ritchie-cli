@@ -1,13 +1,13 @@
 package cmd
 
 import (
-	"testing"
+"testing"
 )
 
-func TestNewCleanCmd(t *testing.T) {
-	cmd := NewCleanCmd()
+func TestNewBuildCmd(t *testing.T) {
+	cmd := NewBuildCmd()
 	if cmd == nil {
-		t.Errorf("NewCleanCmd got %v", cmd)
+		t.Errorf("NewBuildCmd got %v", cmd)
 
 	}
 

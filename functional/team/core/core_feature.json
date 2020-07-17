@@ -82,7 +82,7 @@
                 "action":"main"
             }
         ],
-        "result":"Delete objects like users, etc."
+        "result":"Delete objects like contexts and repo"
     },
     {
         "entry":"Delete context",
@@ -115,7 +115,7 @@
                 "action":"main"
             }
         ],
-        "result":"Show objects like context, organization etc."
+        "result":"Show contexts"
     },
     {
         "entry":"Show context",
@@ -148,7 +148,7 @@
                 "action":"main"
             }
         ],
-        "result":"Add autocomplete for terminal, Available for (bash, zsh)."
+        "result":"Add autocomplete for terminal, Available for (zsh, bash, fish, powershell)."
     },
     {
         "entry":"Completion bash",
@@ -251,7 +251,7 @@
                 "action":"main"
             }
         ],
-        "result":"It can be used to update formulas repositories and etc."
+        "result":"It can be used to update formulas, repositories and etc."
     },
     {
         "entry":"Update repo",
@@ -263,33 +263,6 @@
             }
         ],
         "result":"Successfully got an update"
-    },
-    {
-        "entry":"Clean",
-        "steps":[
-            {
-                "key":"",
-                "value":"clean",
-                "action":"main"
-            }
-        ],
-        "result":"It can be used to clean formulas, repositories and other objects.."
-    },
-    {
-        "entry":"Clean Repo",
-        "steps":[
-            {
-                "key":"",
-                "value":"clean repo",
-                "action":"main"
-            },
-            {
-                "key":"Name of the repository:",
-                "value":"Leonidas",
-                "action":"sendkey"
-            }
-        ],
-        "result":"\"Leonidas\" has been cleaned successfully"
     },
     {
         "entry":"Delete repo",
